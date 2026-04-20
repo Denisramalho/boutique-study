@@ -7,9 +7,15 @@ jobs:
         steps:
             - name: checkout
               uses: actions/checkout@v6
+            - name: baixando dependencias
+              working-directory: src/productcatalogservice
+              run: go mod download
             - name: build
               working-directory: src/productcatalogservice
               run: go build
+            - name: test
+              working-directory: src/productcatalogservice
+              run: go test
 
             
   
