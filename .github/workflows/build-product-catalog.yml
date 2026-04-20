@@ -13,7 +13,7 @@ jobs:
             - name: Setup Go
               uses: actions/setup-go@v6
               with:
-                 go-version-file: 'go.mod'
+                 go-version-file: 'src/productcatalogservice/go.mod'
             - name: Install dependencies
               run: go mod download
 
