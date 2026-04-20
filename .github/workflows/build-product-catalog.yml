@@ -34,7 +34,7 @@ jobs:
             with:
                 go-version-file: 'src/productcatalogservice/go.mod'
                 cache-dependency-path: 'src/productcatalogservice/go.sum'
-          - uses: actions/golangci-lint-action@v9  
+          - uses: golangci/golangci-lint-action@v9 
             with:
                 working-directory: src/productcatalogservice
 
