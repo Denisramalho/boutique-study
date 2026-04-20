@@ -15,9 +15,9 @@
 
 - [x] T1.1 — Workflow `hello.yml` com `echo` em `on: push`
 - [x] T1.2 — Job: `checkout` + `setup-go` + `go build`
-- [ ] T1.3 — Job separado `go test` com `needs:`
-- [ ] T1.4 — `actions/cache` para módulos Go (medir antes/depois)
-- [ ] T1.5 — `golangci-lint` como job paralelo
+- [x] T1.3 — Job separado `go test` com `needs:`
+- [x] T1.4 — `actions/cache` para módulos Go (medir antes/depois)
+- [x] T1.5 — `golangci-lint` como job paralelo
 - [ ] T1.6 — Matrix: Go 1.21, 1.22, 1.23
 - [ ] T1.7 — Separar triggers `push` (main), `pull_request` e `workflow_dispatch`
 - [ ] T1.8 — `concurrency:` cancelando runs antigos no mesmo PR
