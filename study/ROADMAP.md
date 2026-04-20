@@ -13,8 +13,8 @@
 
 ## Fase 1 — Fundamentos GitHub Actions
 
-- [ ] T1.1 — Workflow `hello.yml` com `echo` em `on: push`
-- [ ] T1.2 — Job: `checkout` + `setup-go` + `go build`
+- [x] T1.1 — Workflow `hello.yml` com `echo` em `on: push`
+- [x] T1.2 — Job: `checkout` + `setup-go` + `go build`
 - [ ] T1.3 — Job separado `go test` com `needs:`
 - [ ] T1.4 — `actions/cache` para módulos Go (medir antes/depois)
 - [ ] T1.5 — `golangci-lint` como job paralelo

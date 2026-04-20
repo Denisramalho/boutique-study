@@ -19,3 +19,9 @@ Diário do que eu construo, quebro e aprendo.
 
 **Sobre dependências:**
 - `go.mod` e `go.sum` listam as dependências e versões necessárias
+
+### T1.2  — Job: `checkout` + `setup-go` + `go build`
+- **Actions (`uses:`) vs Commands (`run:`)** são diferentes — não podem misturar no mesmo step
+- **`working-directory`** no `defaults` funciona APENAS para `run:`, não para `uses:`
+- **Actions sempre rodam na raiz** do repositório — se precisar de arquivo em subpasta, use caminho relativo completo
+- **Padrão de mercado** é usar `working-directory` centralizado (`defaults:`), não repetir em cada step
