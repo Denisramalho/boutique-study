@@ -25,6 +25,20 @@ jobs:
 
             - name: Run Tests
               run: go test -v -race
+    golangci:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v6
+          - name: Setup Go
+            uses: actions/setup-go@v6
+            with:
+                go-version-file: 'src/productcatalogservice/go.mod'
+                cache-dependency-path: 'src/productcatalogservice/go.sum'
+          - uses: action/golangci-lint-action@v9  
+            with:
+                working-directory: src/productcatalogservice
 
+          
+            
 
 
