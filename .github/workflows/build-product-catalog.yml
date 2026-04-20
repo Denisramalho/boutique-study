@@ -1,4 +1,4 @@
-name: Build Product Catalog
+name: Product Catalog - CI
 on:
     push
 jobs:
@@ -7,15 +7,21 @@ jobs:
         steps:
             - name: checkout
               uses: actions/checkout@v6
-            - name: baixando dependencias
+            - name: Setup Go
+              uses: actions/setup-go@v6
+              with:
+                 go-version-file: 'go.mod'
+            - name: Install dependencies
               working-directory: src/productcatalogservice
               run: go mod download
-            - name: build
+
+            - name: Build application
               working-directory: src/productcatalogservice
               run: go build
-            - name: test
-              working-directory: src/productcatalogservice
-              run: go test
 
-            
-  
+            - name: Run Tests
+              working-directory: src/productcatalogservice
+              run: go test -v
+
+
+
