@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            version: [1.21, 1.22, 1.23]
+            version: [1.25, 1.26]
         defaults:
           run:
             working-directory: src/productcatalogservice
