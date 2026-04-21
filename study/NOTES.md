@@ -150,3 +150,58 @@ Diário do que eu construo, quebro e aprendo.
 - **Padrão de mercado:** todas as empresas com compliance (supply chain) usam multi-stage + distroless
 - **Desvantagem:** sem shell, sem ferramentas de debug (trade-off entre segurança e debugabilidade)
 ---
+---
+### T2.2 — Reescrever como multi-stage com `distroless`
+
+**O que aprendi:**
+
+- **Multi-stage build = 2+ `FROM`s no mesmo Dockerfile** — primeiro stage compila, segundo stage copia só o binário
+- **distroless é "almost nothing"** — sem shell, sem gcc, sem libc dinâmica. Apenas binário + mínimo essencial
+- **Redução de tamanho:** 1.94 GB (golang base) → 38.7 MB (distroless) = **98% menor**
+- **Binário deve ser estático:** usar `CGO_ENABLED=0` para garantir que Go não depende de libc dinâmica
+- **Por que distroless:** menor tamanho, menos surface de ataque (segurança), sem shell = menos exploits
+- **Padrão de mercado:** todas as empresas com compliance (supply chain) usam multi-stage + distroless
+
+---
+### T2.3 — Workflow roda `docker build` em PRs (sem push)
+
+**O que aprendi:**
+
+- **`docker build` em CI valida reproducibilidade** — garante que Dockerfile está correto antes de merge
+- **Em PRs = sem push** — só valida que a imagem constrói, não precisa autenticar
+- **Erro comum:** contexto do build — `docker build -f path/Dockerfile context` precisa que arquivos estejam no `context`
+- **Solução:** ou mude contexto (`docker build ... src/service/`) ou use `working-directory`
+- **Paralelo com Go:** `docker build` roda em paralelo com `go build + test + golangci-lint` — nenhum depende de outro
+- **Resultado:** feedback rápido em ~60s (todos os 3 jobs em paralelo)
+
+---
+### T2.4 — Push para GHCR em merge na main, tag com SHA curto
+
+**O que aprendi:**
+
+- **GHCR = GitHub Container Registry** — registro nativo do GitHub, autenticação com `GITHUB_TOKEN`
+- **Publicar SÓ em main** — use `if: github.ref == 'refs/heads/main'` para rodar job só na main branch
+- **Autenticação:** `docker login ghcr.io -u ${{ github.actor }} --password-stdin` com `secrets.GITHUB_TOKEN`
+- **Tag com SHA curto:** `${GITHUB_SHA:0:7}` (7 primeiros chars) = mais legível que 40 caracteres
+- **Nome da imagem:** `ghcr.io/OWNER/image-name:tag` — precisa do owner/org, não é opcional
+- **Padrão de mercado:** SHA em main = dev consegue testar; semver (v1.0.0) em releases = prod
+- **Resultado:** imagem disponível em GHCR para testes imediatos após merge
+
+---
+### T2.5 — Tag `latest` + semver em git tags
+
+**O que aprendi:**
+
+- **Git tags disparam workflow:** `on: push: tags: ['v*']` roda APENAS quando você faz `git tag v1.0.0`
+- **Múltiplas tags no Docker:**
+	- v1.2.3 → ghcr.io/app:v1.2.3 (exato)
+	- ghcr.io/app:1.2 (minor)
+	- ghcr.io/app:1 (major) 
+	- ghcr.io/app:latest (última release)
+ **Extrair versão da tag:** `TAG=${GITHUB_REF#refs/tags/}` remove prefixo `refs/tags/`
+- **Persistir variáveis entre steps:** use `echo "VAR=value" >> $GITHUB_ENV` (shell vars não persistem)
+- **Acessar variáveis persistidas:** `${{ env.VAR }}` em steps seguintes
+- **Estratégia:** main → SHA (dev), tag → semver (prod)
+- **Resultado:** releases oficiais com versionamento semântico, fácil de rastrear
+
+---

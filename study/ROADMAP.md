@@ -26,10 +26,10 @@
 ## Fase 2 — Docker + Registry
 
 - [x] T2.1 — Build local do Dockerfile; medir tamanho
-- [ ] T2.2 — Reescrever como multi-stage com `distroless`
-- [ ] T2.3 — Workflow roda `docker build` em PRs (sem push)
-- [ ] T2.4 — Push para GHCR em merge na main, tag com SHA curto
-- [ ] T2.5 — Tag `latest` + semver em git tags
+- [x] T2.2 — Reescrever como multi-stage com `distroless`
+- [x] T2.3 — Workflow roda `docker build` em PRs (sem push)
+- [x] T2.4 — Push para GHCR em merge na main, tag com SHA curto
+- [x] T2.5 — Tag `latest` + semver em git tags
 - [ ] T2.6 — Multi-arch (amd64 + arm64) via buildx + QEMU
 - [ ] T2.7 — Cache de layers `type=gha`
 
