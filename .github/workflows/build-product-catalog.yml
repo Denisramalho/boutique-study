@@ -10,11 +10,11 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }} 
     
 jobs:
-    build_product_catalog:
+    build:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            version: [1.25, 1.26]
+            version: [1.25]
         defaults:
           run:
             working-directory: src/productcatalogservice
@@ -47,7 +47,38 @@ jobs:
             with:
                 working-directory: src/productcatalogservice
             continue-on-error: true #Temporariamente até corrigir os erros do linter
+    docker_build:
+        if: github.ref != 'refs/heads/main'
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: src/productcatalogservice
+        steps:
+          - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+          - name: Build Docker Image
+            run: docker build -t product-catalog-service:latest .
 
+    docker_build_push:
+        if: github.ref == 'refs/heads/main'
+        env:
+          registry: ghcr.io
+          image_name: product-catalog-service
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: src/productcatalogservice
+        steps:
+          - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+          - name: Build Docker Image
+            run: docker build -t ${env.registry}/${env.image_name}:${GITHUB_SHA:0:7} .
+          - name: Log in to GitHub Container Registry
+            uses: docker/login-action@v4.1.0 # v4.1.0
+            with:
+              registry: ${{ env.registry }}
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+          - name: Push Docker Image
+            run: docker push ${env.registry}/${env.image_name}:${GITHUB_SHA:0:7}
           
             
 

@@ -25,7 +25,7 @@
 
 ## Fase 2 — Docker + Registry
 
-- [ ] T2.1 — Build local do Dockerfile; medir tamanho
+- [x] T2.1 — Build local do Dockerfile; medir tamanho
 - [ ] T2.2 — Reescrever como multi-stage com `distroless`
 - [ ] T2.3 — Workflow roda `docker build` em PRs (sem push)
 - [ ] T2.4 — Push para GHCR em merge na main, tag com SHA curto
