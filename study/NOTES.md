@@ -3,24 +3,25 @@
 Diário do que eu construo, quebro e aprendo.
 
 ---
-## Entradas
+## Fase 0 — Setup
 
 ### T0.3  — Rodar `go build` e `go test` local (antes de qualquer CI)
 
 **O que aprendi:**
 
-| Comando | O que faz |
-|---|---|
-| `go mod download` | Baixa todas as dependências para `~/go/pkg/mod/` |
-| `go mod vendor` | Copia as dependências para a pasta `vendor/` no repositório |
-| `go build` | Compila e gera o binário (nome = último segmento do módulo) |
-| `go test` | Executa os testes nos arquivos `*_test.go` |
-| `git rm -r --cached` | Remove arquivo do tracking sem deletar do disco |
+| Comando              | O que faz                                                   |
+| -------------------- | ----------------------------------------------------------- |
+| `go mod download`    | Baixa todas as dependências para `~/go/pkg/mod/`            |
+| `go mod vendor`      | Copia as dependências para a pasta `vendor/` no repositório |
+| `go build`           | Compila e gera o binário (nome = último segmento do módulo) |
+| `go test`            | Executa os testes nos arquivos `*_test.go`                  |
+| `git rm -r --cached` | Remove arquivo do tracking sem deletar do disco             |
 
 **Sobre dependências:**
 - `go.mod` e `go.sum` listam as dependências e versões necessárias
 
 ---
+## Fase 1 — Fundamentos GitHub Actions
 ### T1.2  — Job: `checkout` + `setup-go` + `go build`
 
  **O que aprendi:**
@@ -117,4 +118,35 @@ Diário do que eu construo, quebro e aprendo.
 - **Não é chato:** Adicione comentário `# v6` pra manter legível — GitHub Actions mostra em linters
 - **Todas as actions:** checkout, setup-go, golangci-lint, docker/build, deploy, etc. — todas recebem SHA
 - **Resultado:** Seu workflow é auditável e imutável — você controla exatamente qual versão roda
+---
+## Fase 2 — Docker + Registry
 
+### T2.1 — Build local do Dockerfile; medir tamanho
+
+- Utilizei a imagem base `golang:1.26
+- Tamanho final -> 1.94GB
+
+---
+### T2.2 — Reescrever como multi-stage com `distroless`
+
+**O que aprendi:**
+
+- **Multi-stage build = 2+ `FROM`s no mesmo Dockerfile** — primeiro stage compila, segundo stage copia só o binário
+  ```dockerfile
+  FROM golang:1.26 as build      # Stage 1: compilação
+  RUN go build -o app            # gera binário
+  
+  FROM distroless/static         # Stage 2: runtime (sem Go, sem tools)
+  COPY --from=build /app /       # copia só o binário
+  ```
+
+  - **distroless é "almost nothing"** — sem shell, sem gcc, sem libc dinâmica. Apenas binário + mínimo essencial
+- **Redução de tamanho:** 1.94 GB (golang base) → 38.7 MB (distroless) = **98% menor**
+- **Binário deve ser estático:** usar `CGO_ENABLED=0` para garantir que Go não depende de libc dinâmica
+- **Por que distroless:**
+    - Imagem menor = pull mais rápido, menos armazenamento
+    - Menos código = menos surface de ataque (segurança)
+    - Distroless não tem shell, dificulta exploits
+- **Padrão de mercado:** todas as empresas com compliance (supply chain) usam multi-stage + distroless
+- **Desvantagem:** sem shell, sem ferramentas de debug (trade-off entre segurança e debugabilidade)
+---
