@@ -63,6 +63,9 @@ jobs:
         env:
           registry: ghcr.io
           image_name: denisramalho/product-catalog-service
+        permissions:
+          contents: read
+          packages: write
         runs-on: ubuntu-latest
         defaults:
           run:
