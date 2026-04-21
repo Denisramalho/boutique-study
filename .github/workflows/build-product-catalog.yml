@@ -78,7 +78,7 @@ jobs:
               username: ${{ github.actor }}
               password: ${{ secrets.GITHUB_TOKEN }}
           - name: Push Docker Image
-            run: docker push ${{env.registry}}/${{env.image_name}}:${{GITHUB_SHA}}
+            run: docker push ${{env.registry}}/${{env.image_name}}:${{github.sha}}
           
             
 
