@@ -18,10 +18,10 @@
 - [x] T1.3 — Job separado `go test` com `needs:`
 - [x] T1.4 — `actions/cache` para módulos Go (medir antes/depois)
 - [x] T1.5 — `golangci-lint` como job paralelo
-- [ ] T1.6 — Matrix: Go 1.21, 1.22, 1.23
-- [ ] T1.7 — Separar triggers `push` (main), `pull_request` e `workflow_dispatch`
-- [ ] T1.8 — `concurrency:` cancelando runs antigos no mesmo PR
-- [ ] T1.9 — Pin de actions por SHA (e documentar por quê)
+- [x] T1.6 — Matrix: Go 1.21, 1.22, 1.23
+- [x] T1.7 — Separar triggers `push` (main), `pull_request` e `workflow_dispatch`
+- [x] T1.8 — `concurrency:` cancelando runs antigos no mesmo PR
+- [x] T1.9 — Pin de actions por SHA (e documentar por quê)
 
 ## Fase 2 — Docker + Registry
 
