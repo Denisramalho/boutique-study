@@ -10,11 +10,11 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }} 
     
 jobs:
-    build_product_catalog:
+    build:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            version: [1.25, 1.26]
+            version: [1.25]
         defaults:
           run:
             working-directory: src/productcatalogservice
@@ -47,7 +47,12 @@ jobs:
             with:
                 working-directory: src/productcatalogservice
             continue-on-error: true #Temporariamente até corrigir os erros do linter
-
+    docker_build:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+          - name: Build Docker Image
+            run: docker build -t product-catalog-service:latest -f src/productcatalogservice/Dockerfile .
           
             
 
