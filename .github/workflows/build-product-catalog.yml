@@ -49,10 +49,13 @@ jobs:
             continue-on-error: true #Temporariamente até corrigir os erros do linter
     docker_build:
         runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: src/productcatalogservice
         steps:
           - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
           - name: Build Docker Image
-            run: docker build -t product-catalog-service:latest -f src/productcatalogservice/Dockerfile .
+            run: docker build -t product-catalog-service:latest .
           
             
 
